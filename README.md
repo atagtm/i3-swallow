@@ -1,4 +1,5 @@
 ## Bash port of [i3-swallow](https://github.com/jamesofarrell/i3-swallow)
+Used to swallow (send to the scratchpad) a terminal window after a blocking application is run in i3 window manager
 
 ## Requirements
 * bash
