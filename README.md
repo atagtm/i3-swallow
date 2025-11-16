@@ -8,12 +8,12 @@
 ## Installation
 Make it executable
 ```sh
-chmod u+x sallow
+chmod u+x swallow
 ```
 
 ## Usage
 ```sh
-swallow -h
+./swallow -h
 ```
 ## Licence
 This Project is licensed under the MIT License. Check license file for more info.
