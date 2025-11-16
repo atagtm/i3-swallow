@@ -35,6 +35,7 @@ current=$(i3-msg -t get_tree \
 exec "$@" &
 #pid=$!
 
+if [ "$not_restore" -eq 0 ]; then
 event_new=$(
     i3-msg -t subscribe -m '["window"]' \
                 | stdbuf -oL jq -c 'select(
@@ -45,6 +46,7 @@ event_new=$(
 )
 
 new_id=$(jq -r '.container.window' <<< "$event_new")
+fi
 
 i3-msg -q "[id=$current] focus; move scratchpad;"
 
