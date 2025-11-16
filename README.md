@@ -5,8 +5,15 @@
 * i3-msg
 * jq
 
-## Usage
-`swallow -h`
+## Installation
+Make it executable
+```sh
+chmod u+x sallow
+```
 
+## Usage
+```sh
+swallow -h
+```
 ## Licence
 This Project is licensed under the MIT License. Check license file for more info.
