@@ -15,18 +15,18 @@ help() {
         cat <<EOF
 
 positional arguments:
-  cmd         Command to be executed
+  cmd           Command to be executed
 
 options:
-  -h, --help  Show this help message and exit
-  -d          Don't return window on exit.
+  -h, --help    Show this help message and exit
+  -d, --detach  Don't return window on exit.
 EOF
 }
 
 not_restore=0
 case "$1" in
         -h|--help) help; exit ;;
-        -d) not_restore=1; shift ;;
+        -d|--detach) not_restore=1; shift ;;
 esac
 
 current=$(i3-msg -t get_tree \
