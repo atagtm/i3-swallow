@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+usage() {
+        echo "usage: $0 [-h] [-d] cmd [...]"
+}
+
+if [ -z "$1" ]; then
+        usage
+        echo "$0: error: the following arguments are required: cmd"
+        exit 2
+fi
+
+help() {
+        usage
+        cat <<EOF
+
+positional arguments:
+  cmd         Command to be executed
+
+options:
+  -h, --help  Show this help message and exit
+  -d          Don't return window on exit.
+EOF
+}
+
+not_restore=0
+case "$1" in
+        -h|--help) help; exit ;;
+        -d) not_restore=1; shift ;;
+esac
+
+current=$(i3-msg -t get_tree \
+    | jq '.. | objects | select(.focused == true) | .window')
+
+exec "$@" &
+#pid=$!
+
+event_new=$(
+    i3-msg -t subscribe -m '["window"]' \
+                | stdbuf -oL jq -c 'select(
+                        .change=="new" and (.container.window_properties.class != null)
+                        and (.container.type == "con" or .container.type == "floating_con")
+                        )' \
+                | { read -r e; pkill -f 'i3-msg -t subscribe'; echo "$e"; }
+)
+
+new_id=$(jq -r '.container.window' <<< "$event_new")
+
+i3-msg -q "[id=$current] focus; move scratchpad;"
+
+[ "$not_restore" -eq 1 ] && exit 0
+
+i3-msg -t subscribe -m '["window"]' \
+| stdbuf -oL jq -c "select(.change==\"close\" and .container.window == $new_id)" \
+| { read -r e; pkill -f 'i3-msg -t subscribe'; }
+
+i3-msg -q "[id=$current] scratchpad show; floating toggle;"
